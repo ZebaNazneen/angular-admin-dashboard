@@ -17,16 +17,41 @@
             font-size: 26px;">Sign in</h1>
             <label style="font-size: 13px;color: #475569;">Use your work account to continue.</label>
         </article>
-        <form class="login-form">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
             <article class="email-container">
                 <label>Email</label>
-                 <input class="input-email" type="email" />
+                <input class="input-email" type="email"
+                        formControlName="email"  />
+                @if(email.invalid && email.touched)
+                {
+                    <p class="form-error">@if(email.hasError('required'))
+                        {
+                            Email is Required
+                        }
+                        @else if(email.hasError('email'))
+                        {
+                            Enter a valid Email Address
+                        }
+                    </p>
+                }
             </article>
             <article class="password-container">
                 <label>Password</label>
-                <input class="input-password" type="password" />
+                <input class="input-password" type="password" 
+                        formControlName="password"/>
+                @if(password.invalid && password.touched)
+                {
+                    <p class="form-error">@if(password.hasError('required'))
+                        {
+                            Password is Required
+                        }
+                    </p>
+                }
             </article>
-            <button style="height: 44px;" class="pri btn">Sign In</button>
+            @if (errorMessage()) {
+            <p class="error" role="alert">{{ errorMessage() }}</p>
+            }
+            <button [disabled]="loading()" style="height: 44px;" class="pri btn">Sign In</button>
         </form>
         <article class="card">
             <label style ="font-size: 13px; color: rgb(51, 65, 85);line-height: 1.6; font-weight: bolder;"> Demo accounts</label>

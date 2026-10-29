@@ -77,7 +77,10 @@
                 font: inherit;
                 font-size: 14px;
                 font-weight: 500;
+                cursor: pointer;
             } 
+            .form-error, .error { color: #b42318; font-size: 13px; margin: 4px 0 0; }
+            input.ng-invalid.ng-touched { border-color: #b42318; }
         }
         .card
         {
