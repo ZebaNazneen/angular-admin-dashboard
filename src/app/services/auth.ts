@@ -7,14 +7,23 @@ import { environment } from '../../environments/environment';
 })
 export class Auth {
   private supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+  private ready : Promise<void>
 
   readonly session = signal<Session | null>(null);
   readonly isLoggedIn = computed(()=> this.session() != null);
 
   constructor()
   {
-    this.supabase.auth.getSession().then(({data})=>this.session.set(data.session));
+    this.ready= this.supabase.auth.getSession().then(({data})=>this.session.set(data.session));
+      //this.supabase.auth.onAuthStateChange((_event, session) => this.session.set(session));
+
   }
+
+  whenReady()
+  {
+    
+ const timeout = new Promise<void>((resolve) => setTimeout(resolve, 3000));
+  return Promise.race([this.ready, timeout]);  }
 
     async signIn(email: string, password: string) {
     const { error } = await this.supabase.auth.signInWithPassword({ email, password });

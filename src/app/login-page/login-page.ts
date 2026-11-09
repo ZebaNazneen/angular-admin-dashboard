@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Auth } from '../services/auth';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -13,6 +13,8 @@ export class LoginPage {
   private fb = inject(FormBuilder);
   private auth = inject(Auth);
   private router = inject(Router);
+  private activeRoute = inject(ActivatedRoute);
+
   loading = signal<boolean | null>(false);
   errorMessage = signal<string | null>('')
 
@@ -35,8 +37,10 @@ export class LoginPage {
     try {
     const { email, password } = this.loginForm.getRawValue();
       await this.auth.signIn(email, password);
-      alert("correct");
-      //await this.router.navigate(['/dashboard']);
+      //alert("correct");
+      const returnUrl = this.activeRoute.snapshot.queryParamMap.get('returnUrl');
+      const safe = returnUrl?.startsWith('/') && !returnUrl.startsWith('//');
+      await this.router.navigateByUrl(safe ? returnUrl! : '/dashboard');
     } 
     catch {
       this.errorMessage.set('Invalid email or password.');
