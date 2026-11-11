@@ -6,7 +6,7 @@ import { authGuard, guestGuard } from './auth-guard';
 export const routes: Routes = [
     {
         component: LoginPage,
-        path:"",
+        path:"login",
         canActivate: [guestGuard]
     },
     {

@@ -15,6 +15,6 @@ private router = inject(Router);
 async logout() {
     this.auth.session.set(null);   // the signal is already public on the service
   await this.auth.signOut();
-  await this.router.navigate(['/login']);
+  await  this.router.navigate(['/login']);
 }
 }

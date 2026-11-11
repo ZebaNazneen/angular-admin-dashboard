@@ -15,7 +15,7 @@ export class Auth {
   constructor()
   {
     this.ready= this.supabase.auth.getSession().then(({data})=>this.session.set(data.session));
-      //this.supabase.auth.onAuthStateChange((_event, session) => this.session.set(session));
+    this.supabase.auth.onAuthStateChange((_event, session) => this.session.set(session));
 
   }
 
@@ -25,8 +25,10 @@ export class Auth {
  const timeout = new Promise<void>((resolve) => setTimeout(resolve, 3000));
   return Promise.race([this.ready, timeout]);  }
 
-    async signIn(email: string, password: string) {
-    const { error } = await this.supabase.auth.signInWithPassword({ email, password });
+  async signIn(email: string, password: string) {
+    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+     if (error) throw error;
+    this.session.set(data.session);
     if (error) throw error;
   }
 
